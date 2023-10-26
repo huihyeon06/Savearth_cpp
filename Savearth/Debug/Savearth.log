@@ -1,0 +1,38 @@
+﻿  Savearth.cpp
+C:\Users\82105\Documents\workspace\Savearth_cpp\Savearth\Savearth\Savearth.cpp(56,80): warning C4244: '인수': 'T'에서 'T'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\82105\Documents\workspace\Savearth_cpp\Savearth\Savearth\Savearth.cpp(56,68): warning C4244: '인수': 'T'에서 'T'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\82105\Documents\workspace\Savearth_cpp\Savearth\Savearth\Savearth.cpp(59,83): warning C4244: '인수': 'T'에서 'T'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\82105\Documents\workspace\Savearth_cpp\Savearth\Savearth\Savearth.cpp(59,71): warning C4244: '인수': 'T'에서 'T'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+  Savearth.vcxproj -> C:\Users\82105\Documents\workspace\Savearth_cpp\Savearth\Debug\Savearth.exe
