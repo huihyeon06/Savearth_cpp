@@ -1,8 +1,8 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <conio.h>
 #include <windows.h>
-#include <cstdlib> // rand() ÇÔ¼ö¸¦ »ç¿ëÇÏ±â À§ÇØ Æ÷ÇÔ
-#include <ctime>   // srand() ÇÔ¼ö¸¦ »ç¿ëÇÏ±â À§ÇØ Æ÷ÇÔ
+#include <cstdlib> // rand() í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•´ í¬í•¨
+#include <ctime>   // srand() í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•´ í¬í•¨
 
 #define UP 0
 #define DOWN 1
@@ -13,6 +13,7 @@
 
 using namespace std;
 
+
 void init();
 int keyControl();
 void titleDraw();
@@ -21,31 +22,79 @@ void infoDraw();
 void gotoxy(int, int);
 
 int currentState = 0;
-int dotX = 10;
-int dotY = 5;
 
+const int ROWS = 10;
+const int COLS = 10;
+
+class Mini {
+private:
+    char grid[ROWS][COLS];
+
+    void placeObjects() {
+        system("cls");
+        srand(static_cast<unsigned int>(time(0)));
+
+        for (int i = 0; i < ROWS; ++i) {
+            for (int j = 0; j < COLS; ++j) {
+                if (rand() % 20 == 0) {
+                    grid[i][j] = '.';
+                }
+                else {
+                    grid[i][j] = 'ã…';
+                }
+            }
+        }
+    }
+
+    void printGrid() {
+        for (int i = 0; i < ROWS; ++i) {
+            for (int j = 0; j < COLS; ++j) {
+                std::cout << grid[i][j] << "   ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+public:
+    void startMini() {
+        placeObjects();
+        printGrid();
+
+        Sleep(3000); //30ì´ˆ
+        system("cls");
+
+        int guessRow, guessCol;
+        std::cout << "ìœ„ì¹˜ë¥¼ ì¶”ì¸¡í•´ë³´ì„¸ìš” (í–‰ê³¼ ì—´ ìˆœì„œë¡œ ì…ë ¥í•˜ì„¸ìš”): ";
+        std::cin >> guessRow >> guessCol;
+
+        guessRow--;
+        guessCol--;
+
+        if (guessRow < 0 || guessRow >= ROWS || guessCol < 0 || guessCol >= COLS) {
+            std::cout << "ì˜¬ë°”ë¥¸ ë²”ìœ„ì˜ í–‰ê³¼ ì—´ì„ ì…ë ¥í•˜ì„¸ìš”." << std::endl;
+            return;
+        }
+
+        if (grid[guessRow][guessCol] == '.') {
+            std::cout << "ì •ë‹µì…ë‹ˆë‹¤! í•´ë‹¹ ìœ„ì¹˜ì— ìˆì—ˆìŠµë‹ˆë‹¤." << std::endl;
+            Sleep(500); //5ì´ˆ ì •ì§€
+        }
+        else {
+            std::cout << "ì•„ì‰½ì§€ë§Œ í‹€ë ¸ìŠµë‹ˆë‹¤." << std::endl;
+            Sleep(500); //5ì´ˆ ì •ì§€
+        }
+    }
+};
 
 void init() {
-    system("mode con cols = 30 lines = 20 | title °ÔÀÓÁ¦¸ñ");
+    system("mode con cols = 30 lines = 20 | title ê²Œì„ì œëª©");
 
-    COORD bufferSize = { 50, 20 };
-    SMALL_RECT windowSize = { 0, 0, 79, 29 }; 
-
-    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleScreenBufferSize(console, bufferSize);
-    SetConsoleWindowInfo(console, TRUE, &windowSize);
-
-    /*HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO ConsoleCursor;
-    ConsoleCursor.bVisible = 0;
-    ConsoleCursor.dwSize = 1;
-    SetConsoleCursorInfo(consoleHandle, &ConsoleCursor);*/
 }
+
 
 void titleDraw() {
     cout << "\n\n\n\n\n\n\n";
-    cout << "               ¦£----------------------------------¦¤\n";
-    cout << "               |                                  |\n"; 
+    cout << "               â”Œ----------------------------------â”\n";
     cout << "               |                                  |\n";
     cout << "               |                                  |\n";
     cout << "               |                                  |\n";
@@ -53,25 +102,27 @@ void titleDraw() {
     cout << "               |                                  |\n";
     cout << "               |                                  |\n";
     cout << "               |                                  |\n";
-    cout << "               ¦¦__________________________________¦¥\n";
+    cout << "               |                                  |\n";
+    cout << "               â””__________________________________â”˜\n";
 
 }
 
 void infoDraw() {
     system("cls");
     cout << "\n\n\n\n\n\n\n";
-    cout << "               ¦£----------------------------------¦¤\n";
+    cout << "               â”Œ----------------------------------â”\n";
     cout << "               |                                  |\n";
-    cout << "               |              Á¶ÀÛ¹ı              |\n";
+    cout << "               |            ê²Œì„ë°©ë²•              |\n";
     cout << "               |                                  |\n";
-    cout << "               |          W,A,S,D : ¹æÇâÅ°        |\n";
+    cout << "               |            3ì´ˆì•ˆì—               |\n";
+    cout << "               |    '?' ì‚¬ì´ì—ì„œ '.'ì„ ì°¾ìœ¼ì‹œì˜¤   |\n";
     cout << "               |                                  |\n";
-    cout << "               |           SPACE : ¼±ÅÃ           |\n";
+    cout << "               |   30ì´ˆì•ˆì— ëª‡í–‰ ëª‡ì—´ì¸ì§€ ì“°ì‹œì˜¤  |\n";
     cout << "               |                                  |\n";
     cout << "               |                                  |\n";
-    cout << "               ¦¦__________________________________¦¥\n";
-    
-    
+    cout << "               â””__________________________________â”˜\n";
+
+
     while (1) {
         if (keyControl() == SUBMIT) {
             break;
@@ -79,90 +130,11 @@ void infoDraw() {
     }
 }
 
-void startDraw() {
-    system("cls");
-
-    cout << "\n\n\n\n\n\n\n";
-    for (int i = 0; i < 10; ++i) {
-        //cout << "                   ";
-        for (int j = 0; j < 10; ++j) {
-            if (i == dotY && j == dotX) {
-                cout << ". "; // "."ÀÇ À§Ä¡¿¡ Ãâ·Â
-            }
-            else {
-                int randNum = rand() % 2;
-                if (randNum == 0) {
-                    cout << "¡à "; 
-                }
-                else {
-                    cout << "¡á "; 
-                }
-            }
-        }
-        cout << endl;
-    }
-
-    while (1) {
-        int key = keyControl();
-        if (key != -1) {
-            // ¹æÇâÅ°¿¡ µû¶ó "."ÀÇ À§Ä¡¸¦ ¾÷µ¥ÀÌÆ®
-            if (key == UP && dotY > 0) {
-                dotY--;
-            }
-            else if (key == DOWN && dotY < 9) {
-                dotY++;
-            }
-            else if (key == LEFT && dotX > 0) {
-                dotX--;
-            }
-            else if (key == RIGHT && dotX < 9) {
-                dotX++;
-            }
-        }
-        //else if (key == SUBMIT) {
-        //    // ½ºÆäÀÌ½º¹Ù¸¦ ´­·¶À» ¶§ ¹İº¹¹® Á¾·á
-        //    break;
-        //}
-        system("cls"); // È­¸éÀ» Áö¿ì°í »õ·Î ±×¸²
-        cout << "\n\n\n\n\n\n\n";
-        for (int i = 0; i < 10; ++i) {
-            //cout << "                   ";
-            for (int j = 0; j < 10; ++j) {
-                if (i == dotY && j == dotX) {
-                    cout << ". ";
-                }
-                else {
-                    int randNum = rand() % 2;
-                    if (randNum == 0) {
-                        cout << "¡à ";
-                    }
-                    else {
-                        cout << "¡á ";
-                    }
-                }
-            }
-            cout << endl;
-        }
-    }
-}
 
 int keyControl() {
     char temp = _getch();
 
-    if (temp == 224) {
-        temp = _getch();
-        switch (temp) {
-        case 72: // È­»ìÇ¥ À§
-            return UP;
-        case 80: // È­»ìÇ¥ ¾Æ·¡
-            return DOWN;
-        case 75: // È­»ìÇ¥ ¿ŞÂÊ
-            return LEFT;
-        case 77: // È­»ìÇ¥ ¿À¸¥ÂÊ
-            return RIGHT;
-        }
-    }
-    else if (temp == ' ') {
+    if (temp == ' ') {
         return SUBMIT;
     }
     else if (temp == 'w' || temp == 'W') {
@@ -178,41 +150,41 @@ int keyControl() {
         return RIGHT;
     }
 
-    return -1; // À¯È¿ÇÏÁö ¾ÊÀº ÀÔ·ÂÀÎ °æ¿ì -1À» ¹İÈ¯
+    return -1; // ìœ íš¨í•˜ì§€ ì•Šì€ ì…ë ¥ì¸ ê²½ìš° -1ì„ ë°˜í™˜
 }
 
 void gotoxy(int x, int y) {
-    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-    COORD pos; //COORD: Windows API¿¡¼­ »ç¿ëµÇ´Â ±¸Á¶Ã¼·Î, 2Â÷¿ø ÁÂÇ¥¸¦ ³ªÅ¸³¿
+    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE); //ì½˜ì†” í•¸ë“¤ ê°€ì ¸ì˜¤ê¸°
+    COORD pos; //COORD: Windows APIì—ì„œ ì‚¬ìš©ë˜ëŠ” êµ¬ì¡°ì²´ë¡œ, 2ì°¨ì› ì¢Œí‘œë¥¼ ë‚˜íƒ€ëƒ„
     pos.X = x;
     pos.Y = y;
     SetConsoleCursorPosition(consoleHandle, pos);
 }
 
 int menuDraw() {
-    int x = 30;
+    int x = 24;
     int y = 12;
     gotoxy(x - 2, y);
-    cout << "> °ÔÀÓ½ÃÀÛ";
+    cout << "> ê²Œì„ì‹œì‘";
     gotoxy(x, y + 1);
-    cout << "°ÔÀÓ ¹æ¹ı";
+    cout << "ê²Œì„ë°©ë²•";
     gotoxy(x, y + 2);
-    cout << "Á¾·á";
+    cout << "ì¢…ë£Œ";
 
     while (true) {
-        int n = keyControl();
+        int n = keyControl(); //í‚¤ë³´ë“œ ì´ë²¤íŠ¸ë¥¼ í‚¤ê°’ìœ¼ë¡œ ë°›ì•„ì˜¤ê¸°
         switch (n) {
         case UP: {
             if (y > 12) {
-                gotoxy(x - 2, y);
-                cout << " ";
-                gotoxy(x - 2, --y);
-                cout << ">";
+                gotoxy(x - 2, y); //x-2í•˜ëŠ” ì´ìœ ëŠ” ">"ë¥¼ ë‘ì¹¸ ì´ì „ì— ì¶œë ¥í•˜ê¸° ìœ„í•´ì„œì´ë‹¤
+                cout << " "; //ì›ë˜ ìœ„ì¹˜ë¥¼ ì§€ìš°ê¸°
+                gotoxy(x - 2, --y); //ìƒˆë¡œ ì´ë™í•œ ìœ„ì¹˜ë¡œ ì´ë™
+                cout << ">"; //ë‹¤ì‹œ ê·¸ë¦¬ê¸°
             }
             break;
         }
         case DOWN: {
-            if (y < 14) {
+            if (y < 14) { //ìµœëŒ€ 14
                 gotoxy(x - 2, y);
                 cout << " ";
                 gotoxy(x - 2, ++y);
@@ -225,12 +197,11 @@ int menuDraw() {
                 currentState = INFO_STATE;
                 return INFO_STATE;
             }
-            return y - 12;
+            return y - 12; 
         }
         }
     }
 }
-
 int main() {
 
     init();
@@ -238,7 +209,8 @@ int main() {
         titleDraw();
         int menuCode = menuDraw();
         if (menuCode == 0) {
-            startDraw();
+            Mini mini;
+            mini.startMini();
         }
         else if (menuCode == 1) {
             infoDraw();
@@ -251,3 +223,4 @@ int main() {
 
     return 0;
 }
+
